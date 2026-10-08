@@ -1,6 +1,9 @@
 ---
 name: angular-standard
-description: Use when writing, reviewing, or modifying Angular code. Enforces the Angular Coding Standard v2.0 — structure, error handling, logging and redaction, auth and secrets, money handling, design tokens and component architecture.
+description: >-
+  Use when writing, reviewing, or modifying Angular code. Enforces the Angular
+  Coding Standard v2.0 — structure, error handling, logging and redaction, auth
+  and secrets, money handling, design tokens and component architecture.
 ---
 
 # Angular Standard
@@ -10,18 +13,27 @@ Angular 17+: standalone components, signals, built-in control flow, functional i
 
 ## Never
 
-- `localStorage` / `sessionStorage` for a token or any PII.
-- A secret, API key or credential anywhere in the repo — including `environment.ts`. The bundle is public.
-- `console.log` outside `core/logging/`. Use `LoggerService`.
-- `number` arithmetic on money. See Money below.
-- A raw colour, spacing or font-size value in a component. Use tokens from `tokens.css`.
-- `any`. Use `unknown` and narrow.
-- `.subscribe()` without `takeUntilDestroyed()` or the async pipe. No nested subscribes.
-- `HttpClient` in a `*.component.ts`. Components render; services decide.
-- `::ng-deep`, `ViewEncapsulation.None`, `!important`, direct DOM access, `NgModule`, `*ngIf`/`*ngFor`.
-- `bypassSecurityTrust*` without an `// APPROVED BYPASS` comment naming the input source.
-- `catchError(() => of([]))` that hides a real failure as an empty list.
-- Mapping `snake_case` to `camelCase` in a feature. Wire format is camelCase; a `snake_case` endpoint is a backend defect.
+- Put a token or any PII in `localStorage` / `sessionStorage`.
+- Commit a secret, API key, or credential anywhere in the repo — including `environment.ts`. The bundle is public.
+- Use `console.log` outside `core/logging/`. Use `LoggerService`.
+- Do `number` arithmetic on money. See Money below.
+- Use a raw colour, spacing, or font-size value in a component. Use tokens from `tokens.css`.
+- Use `any`. Use `unknown` and narrow.
+- Call `.subscribe()` without `takeUntilDestroyed()` or the async pipe. No nested subscribes.
+- Use `HttpClient` in a `*.component.ts`. Components render; services decide.
+- Use `::ng-deep`, `ViewEncapsulation.None`, `!important`, direct DOM access, `NgModule`, `*ngIf` / `*ngFor`.
+- Call `bypassSecurityTrust*` without an `// APPROVED BYPASS` comment naming the input source.
+- Use `catchError(() => of([]))` that hides a real failure as an empty list.
+- Map `snake_case` to `camelCase` in a feature. Wire format is camelCase; a `snake_case` endpoint is a backend defect.
+- Call functions in templates except signal reads. Precompute `.filter()` and `.sort()` in the class or a pure pipe.
+- Track `@for` by `$index` on a list that can reorder, filter or delete. Track a stable id — `$index` reattaches component state to the wrong row.
+- Put business logic in a constructor, or use `setTimeout` to paper over change detection. Use `inject()` and `ngOnInit`.
+- Mutate an `@Input()`. Use `input()` and `output()`. A child that writes its inputs cannot be reused.
+- Set `Authorization` outside the auth interceptor. A second header is a defect.
+- Call a third party from the browser with a secret key (Stripe publishable / Mapbox public tokens excepted).
+- Use AWS credentials or a public object URL for uploads.
+- Treat a wallet submission as confirmed payment.
+- Use `<div>` click handlers or `outline: none`.
 
 ## Always
 
@@ -32,6 +44,10 @@ Angular 17+: standalone components, signals, built-in control flow, functional i
 - Environment values from `APP_CONFIG` (runtime `/config.json`), never `environment.prod.ts`.
 - Tokens in memory only; session is an httpOnly cookie set by the backend.
 - Show the correlation id on the error state.
+- Browser calls our API; our API holds third-party secrets. Stripe publishable / Mapbox public tokens are the exception.
+- Uploads: client size/type checks are UX; server returns a short-lived presigned PUT; browser uploads to S3; API verifies the object; bucket stays private.
+- Wallets: submit the transaction hash; backend confirms sender, recipient, amount, and confirmation depth. Contract addresses and chain ids come from `APP_CONFIG`.
+- Actions are `<button>`, navigation is `<a>`, every input has a `<label>`, every icon-only control has an `aria-label`, touch targets ≥ 44×44px.
 
 ## Patterns to copy
 
