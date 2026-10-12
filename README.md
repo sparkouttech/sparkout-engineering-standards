@@ -14,6 +14,7 @@ not copy its contents into a client repository without checking the engagement t
 | `standards/<stack>/` | The coding standard — markdown source and the built PDF |
 | `skills/<stack>/SKILL.md` | The agent skill file for that stack |
 | `config/<stack>/` | Linter and analysis configurations, ready to copy |
+| `docs/` | Procedures — rolling out the tool configurations, and how to change a standard |
 
 The **markdown is the source of truth.** The PDF is built from it in CI — never edit
 the PDF directly, and never let the two disagree.
@@ -36,9 +37,9 @@ You own your stack's folder — see `CODEOWNERS`. Changes go through a pull requ
 and get reviewed, the same discipline the standards themselves require.
 
 `config/<stack>/` is what you drop into a repository to make the enforceable rules
-real. Baseline the existing violations rather than fixing them all at once: suppress
-what exists today, fail the build on new violations only, and work the backlog down
-deliberately.
+real. **See [docs/automation-rollout.md](docs/automation-rollout.md) for the
+step-by-step procedure** — including how to baseline the existing violations so the
+gate blocks new problems without failing the build on old ones.
 
 ## Changing a standard
 
