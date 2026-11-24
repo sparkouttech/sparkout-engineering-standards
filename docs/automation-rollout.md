@@ -28,7 +28,9 @@ From `config/<your-stack>/` in this repository:
 
 | Stack | Files | Goes where |
 |---|---|---|
-| Angular | `eslint.config.js`, `.stylelintrc.js` | project root |
+| Angular | `eslint.config.mjs`, `.stylelintrc.js` | project root |
+| Angular | `package-lint.json`, `angular.schematics.json` | merge into `package.json` / `angular.json` |
+| Angular | `lint.yml` | `.github/workflows/lint.yml` |
 | React / Next.js | `eslint.config.js`, `.stylelintrc.js` | project root |
 | Node | `eslint.config.js` | project root |
 | Python | `pyproject.ruff.toml` | merge into `pyproject.toml` |
@@ -37,6 +39,8 @@ From `config/<your-stack>/` in this repository:
 | Flutter | `analysis_options.yaml` | project root |
 
 Install any plugins the configuration references. Each standard's appendix lists them.
+For Angular, [config/angular/lint-automation.md](../config/angular/lint-automation.md) has the pinned install command
+and explains the plugin wiring, the `rxjs-angular` fork and the template rules.
 
 ---
 
