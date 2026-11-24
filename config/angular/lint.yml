@@ -1,0 +1,38 @@
+# .github/workflows/lint.yml — the PR lint gate for an Angular project. See lint-automation.md.
+# Gate only: deploy workflows are not touched. Make the `lint` job a required status check in branch protection.
+name: Lint
+on: pull_request
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22.x"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      # Use the project's install command (e.g. `npm install --legacy-peer-deps` where peer ranges conflict).
+      - run: npm ci
+
+      # Only if the environment files import a generated, gitignored file (e.g. env.secrets.ts):
+      # type-aware linting needs it to exist, and lint never reads the values, so use placeholders.
+      # Never wire real secrets into this job.
+      # - name: Generate placeholder env secrets
+      #   env:
+      #     SOME_KEY: placeholder
+      #   run: npm run env:generate
+
+      # eslint-suppressions.json absorbs the recorded violations; a new one fails the job.
+      - name: ESLint
+        run: npm run lint
+
+      # Runs even if ESLint failed, so one run reports both.
+      - name: Stylelint
+        if: ${{ !cancelled() }}
+        run: npm run lint:css

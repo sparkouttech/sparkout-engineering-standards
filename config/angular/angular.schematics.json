@@ -1,0 +1,8 @@
+{
+  "//": "Merge into angular.json at the top level (Tailwind projects). Stops `ng generate component` from emitting an empty stylesheet, which stylelint's no-empty-source rejects. See lint-automation.md.",
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "none"
+    }
+  }
+}
